@@ -59,10 +59,35 @@ object Main extends ZIOAppDefault {
     ) @@ Middleware.serveDirectory(Path.empty, File("resources/static/"))
   )
 
-  override def run = Server
+import doobie.implicits.*
+import doobie.implicits.javatimedrivernative.*
+import doobie.postgres.implicits.*
+import io.github.gaelrenoux.tranzactio.*
+import doobie.*
+import zio.interop.catz.*
+
+  def doSql() = for {
+    conn <- ZIO.service[Connection]
+    } yield {
+      sql"""
+      CREATE TABLE public.checkin (
+      id UUID PRIMARY KEY,
+      user_id INTEGER NOT NULL,
+      timestamp TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+      latitude DOUBLE PRECISION NOT NULL,
+      longitude DOUBLE PRECISION NOT NULL
+    );
+  """.update.run
+  }
+
+  override def run = doSql().provide( ZLayer.succeed(Db.transactor))
+    
+    
+    /*Server
     .serve(routes)
     .provide(
       Server.defaultWithPort(9090),
       ZLayer.succeed(Db.transactor)
     )
+    */
 }

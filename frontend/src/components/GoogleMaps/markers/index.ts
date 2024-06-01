@@ -1,2 +1,2 @@
-export { addSingleMarkers } from "./addSingleMarkers";
-export { addClusterMarkers } from "./addClusterMarkers";
+export { addSingleMarkers1 } from "./addSingleMarkers";
+//export { addClusterMarkers } from "./addClusterMarkers";

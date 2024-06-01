@@ -10,6 +10,7 @@ import zio.http.*
 import zio.http.Middleware.{CorsConfig, cors}
 
 import java.io.File
+import scala.io.Source
 
 object Main extends ZIOAppDefault {
   private val corsConfig = CorsConfig()
@@ -17,15 +18,22 @@ object Main extends ZIOAppDefault {
     Routes(
       Method.GET / Root -> {
         handler {
+          val file = File("resources/static/index.html")
           for {
-            file <- Handler.getResourceAsFile("http/index.html")
             http <- Handler.fromFile(file)
           } yield http
         }.mapError(err => Response.text(s"Error: $err"))
       },
       Method.GET / Root / "checkin" -> {
+        handler {
+          val file = File("resources/static/index.html")
+          for {
+            http <- Handler.fromFile(file)
+          } yield http
+        }.mapError(err => Response.text(s"Error: $err"))
+      },
+      Method.GET / Root / "api/checkin" -> {
         val bar = handler { (req: Request) =>
-          println(req)
           CheckinService.readAll
             .map { checkins => Response.json(checkins.toJson) }
             .mapError { err =>
@@ -36,7 +44,7 @@ object Main extends ZIOAppDefault {
         }
         bar
       },
-      Method.POST / Root / "checkin" -> handler { (req: Request) =>
+      Method.POST / Root / "api/checkin" -> handler { (req: Request) =>
         val body = req.body
         (for {
           coordinates <- body.to[Coordinates]
@@ -48,7 +56,7 @@ object Main extends ZIOAppDefault {
             success => Response.text(success.toJson)
           )
       }
-    ) @@ Middleware.serveDirectory(Path.empty / "_next", new File("resouces/http/_next"))
+    ) @@ Middleware.serveDirectory(Path.empty, File("resources/static/"))
   )
 
   override def run = Server

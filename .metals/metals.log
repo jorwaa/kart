@@ -1,0 +1,7 @@
+2024.06.01 15:06:47 INFO  Started: Metals version 1.3.1 in folders '/Users/joran.aasterud/repos/wigen/kart' for client Visual Studio Code 1.89.1.
+SLF4J(W): Class path contains multiple SLF4J providers.
+SLF4J(W): Found provider [scribe.slf4j.ScribeServiceProvider@37705937]
+SLF4J(W): Found provider [ch.qos.logback.classic.spi.LogbackServiceProvider@29f32ce4]
+SLF4J(W): See https://www.slf4j.org/codes.html#multiple_bindings for an explanation.
+SLF4J(I): Actual provider is of type [scribe.slf4j.ScribeServiceProvider@37705937]
+2024.06.01 15:06:47 WARN  Flyway upgrade recommended: H2 2.2.224 is newer than this version of Flyway and support has not been tested. The latest supported version of H2 is 2.2.220.

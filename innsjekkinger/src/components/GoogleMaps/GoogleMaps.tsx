@@ -54,20 +54,15 @@ export const GoogleMaps2 = ({
   center,
   markers,
   loader,
-  options,
-  setOptions
 }: {
   center: { lat: number; lng: number }|null;
   markers: ReadonlyArray<Marker>;
   loader: Loader | null
-  options: {center: { lat: number; lng: number }; zoom: number; mapTypeId: string;}|null
-  setOptions: (options: {center: { lat: number; lng: number }; zoom: number; mapTypeId: string;}|null) => void
 }) =>
 {
 
-
   const ref = useRef<HTMLDivElement | null>(null);
-  const options1 = localStorage.getItem('mapOptions') ? JSON.parse(localStorage.getItem('mapOptions')!) : null
+  const options = localStorage.getItem('mapOptions') ? JSON.parse(localStorage.getItem('mapOptions')!) : null
   useEffect(() => {
     const existingMap = false
     if (ref.current && loader) {
@@ -75,12 +70,12 @@ export const GoogleMaps2 = ({
     .then(({Map, InfoWindow, MapTypeId}) => {
       console.log(existingMap)
       const mapOptions = {
-        center:  options1 ? options1.center : {
+        center:  options ? options.center : {
           lat: center ? center.lat : 35.652832,
           lng: center ? center.lng : 139.839478
         },
-        zoom:  options1 ? options1.zoom : 4,
-        mapTypeId: options1 ? options1.mapTypeId : MapTypeId.HYBRID,
+        zoom:  options ? options.zoom : 4,
+        mapTypeId: options ? options.mapTypeId : MapTypeId.HYBRID,
         mapId: "fedfb0d3742b540a",
       };
 
@@ -90,14 +85,7 @@ export const GoogleMaps2 = ({
       addSingleMarkers1({ markers, map, loader, infoWindow})
       
       map.addListener('dragend', () => {
-
         localStorage.setItem('mapOptions', JSON.stringify({center: map.getCenter()!.toJSON(), zoom: map.getZoom()!, mapTypeId: map.getMapTypeId()!}))
-
-        // setOptions1({
-        //   center:  map.getCenter()!.toJSON(),
-        //   zoom:  map.getZoom()!,
-        //   mapTypeId: map.getMapTypeId()!
-        // })
       });
     })
   }

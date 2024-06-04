@@ -28,29 +28,31 @@ function App() {
 
   useEffect(() => {
     getAll().then(list => {
-      // Lager checkin-structen med all nødvendig informasjon:
-      const daysAvailable = list.map(c => new Date(new Date(c.timestamp).setHours(0, 0, 0, 0)).getTime()).sort()
-      const daysFiltered = Array.from(new Set(daysAvailable))
-      const checkinsByDay: CheckinsByDay = {}
-      const byDay = daysFiltered.map(d => {
-        const key = new Date(d)
-        const nextDay = new Date(d)
-        nextDay.setDate(key.getDate() + 1)
-        const values = list.filter((c: Checkin) => {
-          const date = new Date(c.timestamp)
-          return ((date >= key) && date <= nextDay)
+      console.log(list)
+      if (list.length > 0) {
+        // Lager checkin-structen med all nødvendig informasjon:
+        const daysAvailable = list.map(c => new Date(new Date(c.timestamp).setHours(0, 0, 0, 0)).getTime()).sort()
+        const daysFiltered = Array.from(new Set(daysAvailable))
+        const checkinsByDay: CheckinsByDay = {}
+        const byDay = daysFiltered.map(d => {
+          const key = new Date(d)
+          const nextDay = new Date(d)
+          nextDay.setDate(key.getDate() + 1)
+          const values = list.filter((c: Checkin) => {
+            const date = new Date(c.timestamp)
+            return ((date >= key) && date <= nextDay)
+          })
+          checkinsByDay[key.toDateString()] = values
+          return { key, values }
         })
-        checkinsByDay[key.toDateString()] = values
-        return { key, values }
-      })
-      const latest = list.reduce((c, b) => new Date(c.timestamp).getTime() > new Date(b.timestamp).getTime() ? c : b)
-        setCheckin({... checkins, all: list, byDay: checkinsByDay, activeDays: daysFiltered.map(d => new Date(d).toDateString())})
-
-        const latestMarker: Marker = { lat: latest.lat, lng: latest.lon, label: (new Date(latest.timestamp)).toLocaleTimeString(), color: "gold", timestamp: latest.timestamp }
-        setMarkers({... markers, latest: latestMarker})
-      }
-      )
-    }, []);
+        const latest = list.reduce((c, b) => new Date(c.timestamp).getTime() > new Date(b.timestamp).getTime() ? c : b)
+          setCheckin({... checkins, all: list, byDay: checkinsByDay, activeDays: daysFiltered.map(d => new Date(d).toDateString())})
+        console.log("ASDASD")
+        console.log(latest)
+          const latestMarker: Marker = { lat: latest.lat, lng: latest.lon, label: (new Date(latest.timestamp)).toLocaleTimeString(), color: "gold", timestamp: latest.timestamp }
+          setMarkers({... markers, latest: latestMarker})
+      } 
+  })}, []);
 
 
   const removeMarkersforDay = (day: string) => {

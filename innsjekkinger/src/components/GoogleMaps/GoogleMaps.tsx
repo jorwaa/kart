@@ -79,7 +79,8 @@ export const GoogleMaps2 = ({
         mapId: "fedfb0d3742b540a",
       };
 
-
+      console.log("markers: ")
+      console.log(markers)
       const map = new Map(ref.current!, mapOptions);
       const infoWindow = new InfoWindow()
       addSingleMarkers1({ markers, map, loader, infoWindow})

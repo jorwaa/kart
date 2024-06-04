@@ -31,8 +31,8 @@ function CheckIn() {
 
 async function foo() {
   await get().then(list => {
-    console.log(list[0])
-    let newestDate = new Date(list[0].timestamp).getTime()
+    console.log(list)
+    let newestDate = (list.length > 0) ? new Date(list[0].timestamp).getTime() : new Date(0).getTime()
     let fifteenMinutes = 15 * 60 * 1000
     let newestPlusFifteenMnutes = newestDate + fifteenMinutes
     if (new Date(newestPlusFifteenMnutes) > new Date()) {

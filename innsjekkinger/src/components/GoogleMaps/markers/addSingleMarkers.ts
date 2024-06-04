@@ -28,7 +28,7 @@ export const addSingleMarkers1 = ({
         borderColor: '#000',
         glyph: color === 'gold' ? svg.documentElement : undefined, 
     });
-
+      console.log({"position": { lat, lng }})
       const marker = new AdvancedMarkerElement({
         map: map,
         position: { lat, lng },
